@@ -21,8 +21,8 @@ A simple REST API built with Flask for user registration, login, and referral tr
 -->Installation and Setup
 
 1. Clone the repository :-
-git clone https://github.com/vinodkumarkuruva/Log.git 
-cd Log
+ - git clone https://github.com/vinodkumarkuruva/Log.git 
+ - cd Log
 
 2. Prerequisites :-
 Python 3.7+: Ensure that Python is installed on your system Flask - As a Framework Docker: For containerizing the application
