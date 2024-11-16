@@ -7,12 +7,10 @@ from log import app, db
 def register():
     data = request.json
     required_fields = ['email', 'name', 'mobile', 'city', 'password']
-    
     # Validate mandatory fields
     for field in required_fields:
         if not data.get(field):
             return jsonify({'error': f'{field} is required'}), 400
-    
     # Check for referral code validity
     referrer = None
     if data.get('referral_code'):
@@ -30,7 +28,6 @@ def register():
     new_user.set_password(data['password'])
     db.session.add(new_user)
     db.session.commit()
-
     return jsonify({'message': 'User registered successfully', 'referral_code': new_user.referral_code}), 201
 
 
@@ -47,3 +44,15 @@ def login():
         return jsonify({'user_id': user.id, 'email': user.email}), 200
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
+
+
+@app.route('/referrals/<int:user_id>', methods=['GET'])
+def get_referrals(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    referrals = [
+        {'name': ref.name, 'email': ref.email, 'registered_at': ref.registered_at}
+        for ref in user.referees
+    ]
+    return jsonify({'referrals': referrals}), 200
