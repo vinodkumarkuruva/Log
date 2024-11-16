@@ -69,7 +69,6 @@ def get_user_and_referrals(user_id):
     user = User.query.get(user_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
-
     # Prepare user details and their referrals
     user_details = {
         'name': user.name,
@@ -78,7 +77,6 @@ def get_user_and_referrals(user_id):
         'referral_code': user.referral_code,
         'registered_at': user.registered_at.strftime('%Y-%m-%d %H:%M:%S')
     }
-
     referrals = [
         {
             'id': referee.id,
@@ -88,8 +86,26 @@ def get_user_and_referrals(user_id):
         }
         for referee in user.referees
     ]
-
     return jsonify({
         'user': user_details,
         'referrals': referrals
     }), 200
+
+
+
+### Extra API's ---------------
+
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    # Query all users from the database
+    users = User.query.all()
+    users_list = [
+        {
+            'id': user.id,
+            'name': user.name,
+            'email': user.email,
+            'referral_code': user.referral_code
+        }
+        for user in users
+    ]
+    return jsonify({'users': users_list}), 200
