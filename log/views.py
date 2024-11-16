@@ -33,4 +33,17 @@ def register():
 
     return jsonify({'message': 'User registered successfully', 'referral_code': new_user.referral_code}), 201
 
-# "referral_code": "55dd07c0-5"
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+    # Validate input
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        return jsonify({'user_id': user.id, 'email': user.email}), 200
+    else:
+        return jsonify({'error': 'Invalid email or password'}), 401
